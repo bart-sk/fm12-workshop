@@ -1,0 +1,25 @@
+{
+  "name": "ziveitprojekty2019_api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "api.js",
+  "scripts": {
+    "start": "node -r dotenv/config api.js",
+    "dev": "NODE_ENV=development nodemon -e js,yaml --ignore dist --ignore '*.test.*' --delay 0.5 --exec 'node -r dotenv/config' ./api.js --",
+    "test": "jest"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@elastic/elasticsearch": "^7.4.0",
+    "@koa/router": "^8.0.1",
+    "dotenv": "^8.1.0",
+    "koa": "^2.8.2",
+    "koa-bodyparser": "^4.2.1",
+    "koa2-winston": "^3.1.1",
+    "winston": "^3.2.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.3"
+  }
+}

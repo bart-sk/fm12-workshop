@@ -1,0 +1,39 @@
+version: '2.2'
+services:
+  elastic:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.4.0
+    container_name: ziveitprojekty_elastic
+    environment:
+      - discovery.type=single-node
+    volumes:
+      - ./data/es:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+
+  kibana:
+    links:
+      - elastic
+    image: docker.elastic.co/kibana/kibana:7.4.0
+    container_name: ziveitprojekty_kibana
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elastic:9200/
+    ports:
+      - 5601:5601
+
+  api:
+    links:
+      - elastic
+    image: node:12
+    container_name: ziveitprojekty_api
+    environment:
+      - API_PORT=10000
+      - ELASTIC_CLIENT_NODE=http://elastic:9200
+      - ELASTIC_INDEX_NAME=ziveitprojekty
+      - NODE_ENV=production
+    ports:
+      - 10000:10000
+    volumes:
+      - ./api:/usr/src/service
+    working_dir: /usr/src/service
+    command: npm start
+    tty: true

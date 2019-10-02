@@ -1,0 +1,17 @@
+image: bartsk/alpine
+
+stages:
+  - deploy
+
+deploy:
+  stage: deploy
+  only:
+    - master
+  before_script:
+    - eval $(ssh-agent -s)
+    - echo "$SPORTNET_ORANGE_PRIVATE_KEY" | ssh-add -
+  script:
+    - echo "$DOTENV" > api/.env
+    - rsync -avzc --no-times --no-perms --no-owner --no-group --exclude /node_modules --exclude ".git*" --delete ./ sportnet@video.sportnet.online:ziveitprojekty/
+    - ssh sportnet@video.sportnet.online "cd ziveitprojekty/api && npm install --production && npm prune --production"
+    - ssh sportnet@video.sportnet.online "cd ziveitprojekty && docker-compose restart"
