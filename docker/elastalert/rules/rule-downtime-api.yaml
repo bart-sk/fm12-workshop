@@ -1,0 +1,17 @@
+name: Api Down
+type: frequency
+index: heartbeat-*
+num_events: 1
+alert:
+  - "slack"
+  - "command"
+command: ["/usr/src/app/notifiers/send-sms-error-500.sh", "API V2 DOWN {@timestamp}"]
+timeframe:
+  minutes: 5
+
+filter:
+  - query:
+      query_string:
+        query: "monitor.status: down AND monitor.id: API-v2"
+
+slack_webhook_url: https://hooks.slack.com/services/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

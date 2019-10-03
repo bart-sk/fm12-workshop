@@ -20,6 +20,10 @@ const logger = winston.createLogger({
       ),
       // silent: process.env.NODE_ENV !== 'development',
     }),
+    new winston.transports.File({
+      filename: 'logs/info.log',
+      level: 'info'
+    }),
   ],
 });
 
@@ -48,14 +52,21 @@ router.post('/sensors', async (ctx, next) => {
   })).body;
 });
 
+
+router.get('/status', async (ctx, next) => {
+  ctx.body = {test: true};
+});
+
 app
   .use(bodyParser())
   .use(
     accesslog({
-      transports: new winston.transports.Console({
+      transports: [new winston.transports.Console({
         json: true,
         stringify: true,
-      }),
+      }), new winston.transports.File({
+        filename: 'logs/access.log'
+      })],
       level: 'info',
       reqKeys: [
         'header',
@@ -66,7 +77,7 @@ app
         'query',
         'length',
       ],
-      reqSelect: [],
+      reqSelect: ['ip'],
       reqUnselect: ['header.cookie'],
       resKeys: ['header', 'status'],
       resSelect: [],

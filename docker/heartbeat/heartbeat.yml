@@ -1,0 +1,33 @@
+output.elasticsearch:
+  hosts: ["elastic:9200"]
+heartbeat.monitors:
+  - type: http
+    id: "API-v2"
+    schedule: '@every 5s'
+    urls: ["https://api-v2.pricemania.sk/v1/status"]
+    check.response:
+      status: 200
+      json:
+        - description: check status
+          condition:
+            equals:
+              status: green
+  - type: http
+    id: "API-V2-POSTGRELISTENER"
+    schedule: '@every 5s'
+    urls: ["http://api-postgre-listener.pricemania.sk"]
+    check.response:
+      status: 200
+      json:
+        - description: check status
+          condition:
+            equals:
+              status: green
+  - type: http
+    id: "www-pricemania"
+    schedule: '@every 5s'
+    urls: ["https://www.pricemania.sk"]
+    check.response.status: 200
+
+heartbeat.scheduler:
+  limit: 10

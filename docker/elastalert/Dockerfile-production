@@ -1,0 +1,17 @@
+FROM python:2.7
+
+WORKDIR /usr/src/app
+
+RUN pip install "elastalert>=0.2.0b"
+
+RUN mkdir example_rules
+
+COPY config.production.yaml /usr/src/app/config.yaml
+
+COPY rules /usr/src/app/rules
+
+COPY notifiers /usr/src/app/notifiers
+
+RUN chmod 0777 /usr/src/app/notifiers/send-sms-error-500.sh
+
+CMD elastalert-create-index && elastalert
